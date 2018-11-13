@@ -36,8 +36,16 @@ conan_basic_setup()''')
         cmake.build()
         cmake.install()
 
-    def package(self):
-        pass
+    def package(self):   
+        # Copying static and dynamic libs
+        self.copy(pattern="*.a", dst="lib", src=".", keep_path=False)
+        self.copy(pattern="*.lib", dst="lib", src=".", keep_path=False)
+        self.copy(pattern="*.dll", dst="bin", src=".", keep_path=False)
+        self.copy(pattern="*.so*", dst="lib", src=".", keep_path=False)
+        self.copy(pattern="*.dylib*", dst="lib", src=".", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["globjects"]
+        if self.settings.build_type == "Debug":
+            self.cpp_info.libs = ["globjectsd"]
+        else:
+            self.cpp_info.libs = ["globjects"]
